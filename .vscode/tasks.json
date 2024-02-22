@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Prisma Migrate",
+      "type": "shell",
+      "command": "pnpm exec prisma migrate dev --name ${input:migration-name}",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+        "id": "migration-name",
+        "description": "Migration name:",
+        "default": "",
+        "type": "promptString"
+    },
+]
+}
