@@ -20,6 +20,7 @@ model User {
     email String @unique()
     name String?
     posts Post[]
+    comments Comment[]
     role String @default("user")
 }
 
@@ -33,6 +34,25 @@ model Post {
     content String
     published Boolean @default(false)
     viewCount Int @default(0)
+    comments Comment[]
     author User @relation(fields: [authorId], references: [id])
     authorId Int
+}
+
+/// @@allow('create', post.published && auth() != null)
+/// @@allow('read', true)
+/// @@allow('update', auth() == author)
+/// @@allow('delete', auth() == author || auth() == post.author)
+model Comment {
+    id Int @id() @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    content String
+    post Post @relation(fields: [postId], references: [id])
+    postId Int
+    author User @relation(fields: [authorId], references: [id])
+    authorId Int
+    children Comment[] @relation("ParentCommentToChildComments")
+    parent Comment? @relation("ParentCommentToChildComments", fields: [parentId], references: [id])
+    parentId Int?
 }
